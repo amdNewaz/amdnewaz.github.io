@@ -1,0 +1,1 @@
+# amdnewaz.github.io
