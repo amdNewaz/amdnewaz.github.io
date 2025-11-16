@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Portfolio - Interactive Experience</title>
+    <title>MD NEWAZ ALAM - Senior Backend Engineer</title>
     <style>
         * {
             margin: 0;
@@ -13,562 +13,374 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 40px 20px;
         }
 
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 1;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 50px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header .title {
+            font-size: 1.2em;
+            font-weight: 300;
+            margin-bottom: 5px;
+            opacity: 0.95;
+        }
+
+        .header .subtitle {
+            font-size: 1em;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+
+        .contact-info a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .contact-info a:hover {
+            opacity: 0.8;
         }
 
         .content {
-            position: relative;
-            z-index: 2;
-            pointer-events: none;
+            padding: 50px;
         }
 
-        .content > * {
-            pointer-events: auto;
+        .section {
+            margin-bottom: 40px;
         }
 
-        header {
-            padding: 2rem;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: fadeInDown 1s ease-out;
+        .summary {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: #555;
         }
 
-        .tagline {
-            font-size: 1.2rem;
-            color: #f0f0f0;
-            animation: fadeInUp 1s ease-out 0.3s both;
-        }
-
-        .sections {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .skills-grid {
             display: grid;
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 1s ease-out both;
+        .skill-category h3 {
+            font-size: 1.1em;
+            color: #764ba2;
+            margin-bottom: 12px;
+            font-weight: 600;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+        .skill-category ul {
+            list-style: none;
         }
 
-        .card h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #ffd700;
+        .skill-category li {
+            padding: 6px 0;
+            color: #666;
+            font-size: 0.95em;
         }
 
-        .card p {
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        .skills {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .skill-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .skill-item:hover {
-            background: rgba(255, 215, 0, 0.3);
-            transform: scale(1.05);
-        }
-
-        .projects {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .project-item {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid #ffd700;
-            transition: all 0.3s ease;
-        }
-
-        .project-item:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateX(10px);
-        }
-
-        .project-item h3 {
-            color: #ffd700;
-            margin-bottom: 0.5rem;
-        }
-
-        .controls {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 3;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .control-button {
-            background: rgba(255, 215, 0, 0.8);
-            color: #000;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
+        .skill-category li:before {
+            content: "▹ ";
+            color: #667eea;
             font-weight: bold;
-            margin: 0.25rem;
-            transition: all 0.3s ease;
+            margin-right: 8px;
         }
 
-        .control-button:hover {
-            background: #ffd700;
-            transform: scale(1.05);
+        .experience-item, .education-item {
+            margin-bottom: 30px;
         }
 
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.3);
-            margin-top: 2rem;
+        .job-header, .edu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
         }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
+        .job-title, .degree {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .company, .institution {
+            font-size: 1em;
+            color: #764ba2;
+            font-weight: 500;
+        }
+
+        .date {
+            color: #888;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .responsibilities {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .responsibilities li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .responsibilities li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .research-focus {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .research-focus strong {
+            color: #764ba2;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .container {
+                box-shadow: none;
             }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .header {
+                background: #667eea;
             }
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+            .content {
+                padding: 30px 25px;
             }
-
-            .controls {
-                bottom: 1rem;
-                right: 1rem;
-                padding: 0.5rem;
+            .header {
+                padding: 40px 25px;
             }
-
-            .card {
-                padding: 1.5rem;
+            .header h1 {
+                font-size: 2em;
+            }
+            .job-header, .edu-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .skills-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div id="canvas-container"></div>
-
-    <div class="content">
-        <header>
-            <h1>Welcome to My 3D Portfolio</h1>
-            <p class="tagline">Interactive 3D Experience | Developer & Creator</p>
-        </header>
-
-        <div class="sections">
-            <div class="card" style="animation-delay: 0.1s;">
-                <h2>About Me</h2>
-                <p>
-                    Welcome to my interactive 3D portfolio! I'm a passionate developer who loves creating 
-                    immersive web experiences. This portfolio showcases my work using cutting-edge web 
-                    technologies including Three.js for stunning 3D graphics and modern CSS for beautiful 
-                    design.
-                </p>
-            </div>
-
-            <div class="card" style="animation-delay: 0.2s;">
-                <h2>Skills</h2>
-                <div class="skills">
-                    <div class="skill-item">JavaScript</div>
-                    <div class="skill-item">Three.js</div>
-                    <div class="skill-item">HTML5</div>
-                    <div class="skill-item">CSS3</div>
-                    <div class="skill-item">WebGL</div>
-                    <div class="skill-item">React</div>
-                    <div class="skill-item">Node.js</div>
-                    <div class="skill-item">Git</div>
-                </div>
-            </div>
-
-            <div class="card" style="animation-delay: 0.3s;">
-                <h2>Projects</h2>
-                <div class="projects">
-                    <div class="project-item">
-                        <h3>3D Portfolio Website</h3>
-                        <p>An interactive portfolio featuring 3D graphics and smooth animations.</p>
-                    </div>
-                    <div class="project-item">
-                        <h3>Web Applications</h3>
-                        <p>Modern, responsive web applications built with latest technologies.</p>
-                    </div>
-                    <div class="project-item">
-                        <h3>Creative Visualizations</h3>
-                        <p>Data visualization and interactive experiences using WebGL.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card" style="animation-delay: 0.4s;">
-                <h2>Contact</h2>
-                <p>
-                    Interested in working together? Feel free to reach out!<br>
-                    The 3D scene above is interactive - click and drag to rotate the view.
-                </p>
+    <div class="container">
+        <div class="header">
+            <h1>MD NEWAZ ALAM</h1>
+            <div class="title">Senior Backend Engineer | Node.js & AWS Specialist</div>
+            <div class="subtitle">PhD Researcher in Cryptography & Privacy-Preserving Systems</div>
+            <div class="contact-info">
+                <div>📧 <a href="mailto:amdnewaz@gmail.com">amdnewaz@gmail.com</a></div>
+                <div>🔗 <a href="https://linkedin.com/in/md-newaz-alam-4309521ba" target="_blank">LinkedIn</a></div>
+                <div>📍 Johor Bahru, Johor, Malaysia</div>
             </div>
         </div>
 
-        <footer>
-            <p>&copy; 2024 3D Portfolio. Powered by Three.js</p>
-        </footer>
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Professional Summary</h2>
+                <div class="summary">
+                    Senior Backend Engineer with 5+ years of experience building scalable Node.js/TypeScript systems. 
+                    Proven expertise in microservices, REST APIs, and event-driven architectures on AWS. 
+                    Demonstrated success optimizing system performance by 30% and maintaining 99.9% uptime. 
+                    Currently a part-time PhD Researcher in Cryptography & Privacy-Preserving Systems.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Core Technical Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>Backend</h3>
+                        <ul>
+                            <li>Node.js</li>
+                            <li>TypeScript</li>
+                            <li>Express.js</li>
+                            <li>NestJS</li>
+                            <li>Microservices</li>
+                            <li>REST APIs</li>
+                            <li>Event-driven Architecture</li>
+                            <li>GraphQL</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Cloud & DevOps</h3>
+                        <ul>
+                            <li>AWS (Lambda, EC2, S3)</li>
+                            <li>API Gateway</li>
+                            <li>CloudWatch, RDS</li>
+                            <li>Docker</li>
+                            <li>Kubernetes</li>
+                            <li>CI/CD (GitHub Actions)</li>
+                            <li>Terraform</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Databases</h3>
+                        <ul>
+                            <li>MongoDB</li>
+                            <li>PostgreSQL</li>
+                            <li>MySQL</li>
+                            <li>Redis</li>
+                            <li>Database Optimization</li>
+                            <li>Mongoose</li>
+                            <li>TypeORM</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Research & ML</h3>
+                        <ul>
+                            <li>PyTorch</li>
+                            <li>TensorFlow</li>
+                            <li>PySyft (Federated Learning)</li>
+                            <li>Cryptography</li>
+                            <li>Blockchain</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Professional Experience</h2>
+                
+                <div class="experience-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-title">Senior Backend Engineer</div>
+                            <div class="company">VE Capital Asia — Malaysia</div>
+                        </div>
+                        <div class="date">March 2022 – March 2025</div>
+                    </div>
+                    <ul class="responsibilities">
+                        <li>Architected scalable Node.js/TypeScript backend systems (microservices, REST APIs) for 100K+ active mobile users</li>
+                        <li>Improved application performance by 30% and reduced API response time by 40% via database optimization (MongoDB, PostgreSQL) and Redis caching</li>
+                        <li>Engineered monitoring systems reducing incident response time by 50%</li>
+                        <li>Established CI/CD pipelines (GitHub Actions) and testing strategies, reducing bugs by 30%</li>
+                        <li>Maintained 99.9% uptime across backend services</li>
+                        <li>Mentored 5+ junior developers in backend best practices and performance tuning</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-title">Backend Developer</div>
+                            <div class="company">eRider — Remote</div>
+                        </div>
+                        <div class="date">August 2021 – February 2022</div>
+                    </div>
+                    <ul class="responsibilities">
+                        <li>Developed Node.js REST APIs and real-time geolocation services using WebSockets for a ride-hailing app</li>
+                        <li>Designed MongoDB schemas optimized for high-throughput, low-latency processing</li>
+                        <li>Integrated payment gateways and mapping service APIs</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-title">Full-Stack Developer (Backend Focus)</div>
+                            <div class="company">Infinity — Malaysia</div>
+                        </div>
+                        <div class="date">May 2021 – July 2021</div>
+                    </div>
+                    <ul class="responsibilities">
+                        <li>Built Node.js APIs for Flutter applications, increasing user engagement by 20%</li>
+                        <li>Implemented Redis caching layer, improving API response time by 35%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Education & Research</h2>
+                
+                <div class="education-item">
+                    <div class="edu-header">
+                        <div>
+                            <div class="degree">Doctor of Philosophy (PhD), Engineering</div>
+                            <div class="institution">University of Southampton Malaysia — Johor Bahru, Malaysia</div>
+                        </div>
+                        <div class="date">June 2024 – Present</div>
+                    </div>
+                    <div class="research-focus">
+                        <strong>Research focus:</strong> Lightweight Cryptographic Protocols • Privacy-Preserving Federated Learning for IoT
+                    </div>
+                </div>
+
+                <div class="education-item">
+                    <div class="edu-header">
+                        <div>
+                            <div class="degree">Bachelor of Engineering (B.Eng.), Computer Software Engineering</div>
+                            <div class="institution">Universiti Teknologi Malaysia — Johor Bahru, Malaysia</div>
+                        </div>
+                        <div class="date">2019 – 2022</div>
+                    </div>
+                    <div class="research-focus">
+                        <strong>Achievement:</strong> Dean's List
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="controls">
-        <button class="control-button" onclick="toggleAnimation()">Toggle Animation</button>
-        <button class="control-button" onclick="changeColor()">Change Color</button>
-    </div>
-
-    <script>
-        // Canvas-based 3D Animation
-        let canvas, ctx;
-        let particles = [];
-        let shapes = [];
-        let animationEnabled = true;
-        let colorHue = 0;
-        let mouseX = 0;
-        let mouseY = 0;
-        let rotationX = 0;
-        let rotationY = 0;
-
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.z = Math.random() * 1000;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.vz = Math.random() * 2 + 1;
-                this.size = Math.random() * 2 + 1;
-                this.hue = Math.random() * 60 + colorHue;
-            }
-
-            update() {
-                this.z -= this.vz;
-                if (this.z <= 0) {
-                    this.reset();
-                    this.z = 1000;
-                }
-
-                const scale = 500 / this.z;
-                this.sx = (this.x - canvas.width / 2) * scale + canvas.width / 2;
-                this.sy = (this.y - canvas.height / 2) * scale + canvas.height / 2;
-                this.ssize = this.size * scale;
-            }
-
-            draw() {
-                ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${1 - this.z / 1000})`;
-                ctx.beginPath();
-                ctx.arc(this.sx, this.sy, this.ssize, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        class Shape3D {
-            constructor(x, y, type, color) {
-                this.x = x;
-                this.y = y;
-                this.z = 0;
-                this.type = type;
-                this.color = color;
-                this.rotX = 0;
-                this.rotY = 0;
-                this.rotZ = 0;
-                this.size = 80;
-            }
-
-            update() {
-                if (animationEnabled) {
-                    this.rotX += 0.01;
-                    this.rotY += 0.015;
-                    this.rotZ += 0.005;
-                }
-            }
-
-            project(x, y, z) {
-                // Apply rotations
-                let cos, sin;
-                
-                // Rotate around X axis
-                cos = Math.cos(this.rotX + rotationX);
-                sin = Math.sin(this.rotX + rotationX);
-                let y1 = y * cos - z * sin;
-                let z1 = y * sin + z * cos;
-                
-                // Rotate around Y axis
-                cos = Math.cos(this.rotY + rotationY);
-                sin = Math.sin(this.rotY + rotationY);
-                let x2 = x * cos + z1 * sin;
-                let z2 = -x * sin + z1 * cos;
-                
-                // Rotate around Z axis
-                cos = Math.cos(this.rotZ);
-                sin = Math.sin(this.rotZ);
-                let x3 = x2 * cos - y1 * sin;
-                let y3 = x2 * sin + y1 * cos;
-                
-                // Perspective projection
-                const scale = 300 / (300 + z2);
-                return {
-                    x: x3 * scale + this.x,
-                    y: y3 * scale + this.y,
-                    z: z2
-                };
-            }
-
-            draw() {
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 2;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
-
-                if (this.type === 'cube') {
-                    this.drawCube();
-                } else if (this.type === 'pyramid') {
-                    this.drawPyramid();
-                } else if (this.type === 'octahedron') {
-                    this.drawOctahedron();
-                }
-
-                ctx.shadowBlur = 0;
-            }
-
-            drawCube() {
-                const s = this.size;
-                const vertices = [
-                    [-s, -s, -s], [s, -s, -s], [s, s, -s], [-s, s, -s],
-                    [-s, -s, s], [s, -s, s], [s, s, s], [-s, s, s]
-                ];
-                const edges = [
-                    [0, 1], [1, 2], [2, 3], [3, 0],
-                    [4, 5], [5, 6], [6, 7], [7, 4],
-                    [0, 4], [1, 5], [2, 6], [3, 7]
-                ];
-                
-                const projected = vertices.map(v => this.project(v[0], v[1], v[2]));
-                
-                edges.forEach(edge => {
-                    const p1 = projected[edge[0]];
-                    const p2 = projected[edge[1]];
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                });
-            }
-
-            drawPyramid() {
-                const s = this.size;
-                const vertices = [
-                    [0, -s, 0],
-                    [-s, s, -s], [s, s, -s],
-                    [s, s, s], [-s, s, s]
-                ];
-                const edges = [
-                    [0, 1], [0, 2], [0, 3], [0, 4],
-                    [1, 2], [2, 3], [3, 4], [4, 1]
-                ];
-                
-                const projected = vertices.map(v => this.project(v[0], v[1], v[2]));
-                
-                edges.forEach(edge => {
-                    const p1 = projected[edge[0]];
-                    const p2 = projected[edge[1]];
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                });
-            }
-
-            drawOctahedron() {
-                const s = this.size;
-                const vertices = [
-                    [0, -s, 0], [0, s, 0],
-                    [-s, 0, 0], [s, 0, 0],
-                    [0, 0, -s], [0, 0, s]
-                ];
-                const edges = [
-                    [0, 2], [0, 3], [0, 4], [0, 5],
-                    [1, 2], [1, 3], [1, 4], [1, 5],
-                    [2, 4], [4, 3], [3, 5], [5, 2]
-                ];
-                
-                const projected = vertices.map(v => this.project(v[0], v[1], v[2]));
-                
-                edges.forEach(edge => {
-                    const p1 = projected[edge[0]];
-                    const p2 = projected[edge[1]];
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                });
-            }
-        }
-
-        function init() {
-            canvas = document.createElement('canvas');
-            canvas.style.position = 'absolute';
-            canvas.style.top = '0';
-            canvas.style.left = '0';
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-            document.getElementById('canvas-container').appendChild(canvas);
-            
-            ctx = canvas.getContext('2d');
-            resizeCanvas();
-
-            // Create particles
-            for (let i = 0; i < 200; i++) {
-                particles.push(new Particle());
-            }
-
-            // Create 3D shapes
-            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd93d', '#6bcf7f'];
-            const types = ['cube', 'pyramid', 'octahedron', 'cube', 'pyramid'];
-            
-            for (let i = 0; i < 5; i++) {
-                const angle = (i / 5) * Math.PI * 2;
-                const radius = Math.min(canvas.width, canvas.height) * 0.25;
-                const x = canvas.width / 2 + Math.cos(angle) * radius;
-                const y = canvas.height / 2 + Math.sin(angle) * radius;
-                shapes.push(new Shape3D(x, y, types[i], colors[i]));
-            }
-
-            // Mouse tracking
-            document.addEventListener('mousemove', (e) => {
-                mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
-                mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
-                rotationX = mouseY;
-                rotationY = mouseX;
-            });
-
-            // Touch tracking
-            document.addEventListener('touchmove', (e) => {
-                if (e.touches.length > 0) {
-                    mouseX = (e.touches[0].clientX / window.innerWidth - 0.5) * 0.5;
-                    mouseY = (e.touches[0].clientY / window.innerHeight - 0.5) * 0.5;
-                    rotationX = mouseY;
-                    rotationY = mouseX;
-                }
-            });
-
-            animate();
-        }
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Update and draw particles
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-
-            // Update and draw 3D shapes
-            shapes.forEach(shape => {
-                shape.update();
-                shape.draw();
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        function toggleAnimation() {
-            animationEnabled = !animationEnabled;
-        }
-
-        function changeColor() {
-            colorHue = (colorHue + 60) % 360;
-            const colors = [
-                `hsl(${colorHue}, 100%, 60%)`,
-                `hsl(${(colorHue + 60) % 360}, 100%, 60%)`,
-                `hsl(${(colorHue + 120) % 360}, 100%, 60%)`,
-                `hsl(${(colorHue + 180) % 360}, 100%, 60%)`,
-                `hsl(${(colorHue + 240) % 360}, 100%, 60%)`
-            ];
-            shapes.forEach((shape, i) => {
-                shape.color = colors[i];
-            });
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('load', init);
-    </script>
 </body>
 </html>
