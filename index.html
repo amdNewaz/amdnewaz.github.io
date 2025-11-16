@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Portfolio - Interactive Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .content > * {
+            pointer-events: auto;
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #f0f0f0;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .sections {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 1s ease-out both;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .card p {
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .project-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+            transition: all 0.3s ease;
+        }
+
+        .project-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(10px);
+        }
+
+        .project-item h3 {
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .control-button {
+            background: rgba(255, 215, 0, 0.8);
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            background: #ffd700;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <div class="content">
+        <header>
+            <h1>Welcome to My 3D Portfolio</h1>
+            <p class="tagline">Interactive 3D Experience | Developer & Creator</p>
+        </header>
+
+        <div class="sections">
+            <div class="card" style="animation-delay: 0.1s;">
+                <h2>About Me</h2>
+                <p>
+                    Welcome to my interactive 3D portfolio! I'm a passionate developer who loves creating 
+                    immersive web experiences. This portfolio showcases my work using cutting-edge web 
+                    technologies including Three.js for stunning 3D graphics and modern CSS for beautiful 
+                    design.
+                </p>
+            </div>
+
+            <div class="card" style="animation-delay: 0.2s;">
+                <h2>Skills</h2>
+                <div class="skills">
+                    <div class="skill-item">JavaScript</div>
+                    <div class="skill-item">Three.js</div>
+                    <div class="skill-item">HTML5</div>
+                    <div class="skill-item">CSS3</div>
+                    <div class="skill-item">WebGL</div>
+                    <div class="skill-item">React</div>
+                    <div class="skill-item">Node.js</div>
+                    <div class="skill-item">Git</div>
+                </div>
+            </div>
+
+            <div class="card" style="animation-delay: 0.3s;">
+                <h2>Projects</h2>
+                <div class="projects">
+                    <div class="project-item">
+                        <h3>3D Portfolio Website</h3>
+                        <p>An interactive portfolio featuring 3D graphics and smooth animations.</p>
+                    </div>
+                    <div class="project-item">
+                        <h3>Web Applications</h3>
+                        <p>Modern, responsive web applications built with latest technologies.</p>
+                    </div>
+                    <div class="project-item">
+                        <h3>Creative Visualizations</h3>
+                        <p>Data visualization and interactive experiences using WebGL.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="animation-delay: 0.4s;">
+                <h2>Contact</h2>
+                <p>
+                    Interested in working together? Feel free to reach out!<br>
+                    The 3D scene above is interactive - click and drag to rotate the view.
+                </p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 3D Portfolio. Powered by Three.js</p>
+        </footer>
+    </div>
+
+    <div class="controls">
+        <button class="control-button" onclick="toggleAnimation()">Toggle Animation</button>
+        <button class="control-button" onclick="changeColor()">Change Color</button>
+    </div>
+
+    <script>
+        // Canvas-based 3D Animation
+        let canvas, ctx;
+        let particles = [];
+        let shapes = [];
+        let animationEnabled = true;
+        let colorHue = 0;
+        let mouseX = 0;
+        let mouseY = 0;
+        let rotationX = 0;
+        let rotationY = 0;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.z = Math.random() * 1000;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.vz = Math.random() * 2 + 1;
+                this.size = Math.random() * 2 + 1;
+                this.hue = Math.random() * 60 + colorHue;
+            }
+
+            update() {
+                this.z -= this.vz;
+                if (this.z <= 0) {
+                    this.reset();
+                    this.z = 1000;
+                }
+
+                const scale = 500 / this.z;
+                this.sx = (this.x - canvas.width / 2) * scale + canvas.width / 2;
+                this.sy = (this.y - canvas.height / 2) * scale + canvas.height / 2;
+                this.ssize = this.size * scale;
+            }
+
+            draw() {
+                ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${1 - this.z / 1000})`;
+                ctx.beginPath();
+                ctx.arc(this.sx, this.sy, this.ssize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class Shape3D {
+            constructor(x, y, type, color) {
+                this.x = x;
+                this.y = y;
+                this.z = 0;
+                this.type = type;
+                this.color = color;
+                this.rotX = 0;
+                this.rotY = 0;
+                this.rotZ = 0;
+                this.size = 80;
+            }
+
+            update() {
+                if (animationEnabled) {
+                    this.rotX += 0.01;
+                    this.rotY += 0.015;
+                    this.rotZ += 0.005;
+                }
+            }
+
+            project(x, y, z) {
+                // Apply rotations
+                let cos, sin;
+                
+                // Rotate around X axis
+                cos = Math.cos(this.rotX + rotationX);
+                sin = Math.sin(this.rotX + rotationX);
+                let y1 = y * cos - z * sin;
+                let z1 = y * sin + z * cos;
+                
+                // Rotate around Y axis
+                cos = Math.cos(this.rotY + rotationY);
+                sin = Math.sin(this.rotY + rotationY);
+                let x2 = x * cos + z1 * sin;
+                let z2 = -x * sin + z1 * cos;
+                
+                // Rotate around Z axis
+                cos = Math.cos(this.rotZ);
+                sin = Math.sin(this.rotZ);
+                let x3 = x2 * cos - y1 * sin;
+                let y3 = x2 * sin + y1 * cos;
+                
+                // Perspective projection
+                const scale = 300 / (300 + z2);
+                return {
+                    x: x3 * scale + this.x,
+                    y: y3 * scale + this.y,
+                    z: z2
+                };
+            }
+
+            draw() {
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+
+                if (this.type === 'cube') {
+                    this.drawCube();
+                } else if (this.type === 'pyramid') {
+                    this.drawPyramid();
+                } else if (this.type === 'octahedron') {
+                    this.drawOctahedron();
+                }
+
+                ctx.shadowBlur = 0;
+            }
+
+            drawCube() {
+                const s = this.size;
+                const vertices = [
+                    [-s, -s, -s], [s, -s, -s], [s, s, -s], [-s, s, -s],
+                    [-s, -s, s], [s, -s, s], [s, s, s], [-s, s, s]
+                ];
+                const edges = [
+                    [0, 1], [1, 2], [2, 3], [3, 0],
+                    [4, 5], [5, 6], [6, 7], [7, 4],
+                    [0, 4], [1, 5], [2, 6], [3, 7]
+                ];
+                
+                const projected = vertices.map(v => this.project(v[0], v[1], v[2]));
+                
+                edges.forEach(edge => {
+                    const p1 = projected[edge[0]];
+                    const p2 = projected[edge[1]];
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                });
+            }
+
+            drawPyramid() {
+                const s = this.size;
+                const vertices = [
+                    [0, -s, 0],
+                    [-s, s, -s], [s, s, -s],
+                    [s, s, s], [-s, s, s]
+                ];
+                const edges = [
+                    [0, 1], [0, 2], [0, 3], [0, 4],
+                    [1, 2], [2, 3], [3, 4], [4, 1]
+                ];
+                
+                const projected = vertices.map(v => this.project(v[0], v[1], v[2]));
+                
+                edges.forEach(edge => {
+                    const p1 = projected[edge[0]];
+                    const p2 = projected[edge[1]];
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                });
+            }
+
+            drawOctahedron() {
+                const s = this.size;
+                const vertices = [
+                    [0, -s, 0], [0, s, 0],
+                    [-s, 0, 0], [s, 0, 0],
+                    [0, 0, -s], [0, 0, s]
+                ];
+                const edges = [
+                    [0, 2], [0, 3], [0, 4], [0, 5],
+                    [1, 2], [1, 3], [1, 4], [1, 5],
+                    [2, 4], [4, 3], [3, 5], [5, 2]
+                ];
+                
+                const projected = vertices.map(v => this.project(v[0], v[1], v[2]));
+                
+                edges.forEach(edge => {
+                    const p1 = projected[edge[0]];
+                    const p2 = projected[edge[1]];
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                });
+            }
+        }
+
+        function init() {
+            canvas = document.createElement('canvas');
+            canvas.style.position = 'absolute';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            document.getElementById('canvas-container').appendChild(canvas);
+            
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+
+            // Create particles
+            for (let i = 0; i < 200; i++) {
+                particles.push(new Particle());
+            }
+
+            // Create 3D shapes
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd93d', '#6bcf7f'];
+            const types = ['cube', 'pyramid', 'octahedron', 'cube', 'pyramid'];
+            
+            for (let i = 0; i < 5; i++) {
+                const angle = (i / 5) * Math.PI * 2;
+                const radius = Math.min(canvas.width, canvas.height) * 0.25;
+                const x = canvas.width / 2 + Math.cos(angle) * radius;
+                const y = canvas.height / 2 + Math.sin(angle) * radius;
+                shapes.push(new Shape3D(x, y, types[i], colors[i]));
+            }
+
+            // Mouse tracking
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
+                rotationX = mouseY;
+                rotationY = mouseX;
+            });
+
+            // Touch tracking
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    mouseX = (e.touches[0].clientX / window.innerWidth - 0.5) * 0.5;
+                    mouseY = (e.touches[0].clientY / window.innerHeight - 0.5) * 0.5;
+                    rotationX = mouseY;
+                    rotationY = mouseX;
+                }
+            });
+
+            animate();
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw particles
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            // Update and draw 3D shapes
+            shapes.forEach(shape => {
+                shape.update();
+                shape.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        function toggleAnimation() {
+            animationEnabled = !animationEnabled;
+        }
+
+        function changeColor() {
+            colorHue = (colorHue + 60) % 360;
+            const colors = [
+                `hsl(${colorHue}, 100%, 60%)`,
+                `hsl(${(colorHue + 60) % 360}, 100%, 60%)`,
+                `hsl(${(colorHue + 120) % 360}, 100%, 60%)`,
+                `hsl(${(colorHue + 180) % 360}, 100%, 60%)`,
+                `hsl(${(colorHue + 240) % 360}, 100%, 60%)`
+            ];
+            shapes.forEach((shape, i) => {
+                shape.color = colors[i];
+            });
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
